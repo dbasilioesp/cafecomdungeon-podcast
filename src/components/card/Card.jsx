@@ -12,14 +12,14 @@ export default function Card (props){
                 <span className="card__id">{id}</span>
             </div>
             <p className="card__content">
-                { rpg && <span class="card__rpg">{rpg}</span>}
+                { rpg && <span className="card__rpg">{rpg}</span>}
                 { category && <span className="card__category">{category}</span>}
                 <span className="card__description">{description}</span>
             </p>
             <div className="card__links">
                 {
                     listLinks.map(link => (
-                        <a href={link} target="_blank" rel="noreferrer">{link}</a>
+                        <a href={link} target="_blank" rel="noreferrer" key={link}>{link}</a>
                     ))
                 }
             </div>
