@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +9,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: #FEEB73;
+  opacity: 0.8;
+  background-image:  radial-gradient(#aca46a 0.8500000000000001px, transparent 0.8500000000000001px), radial-gradient(#aca46a 0.8500000000000001px, #FEEB73 0.8500000000000001px);
+  background-size: 34px 34px;
+  background-position: 0 0,17px 17px;
 }
 
 code {

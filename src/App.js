@@ -6,7 +6,7 @@ import mixpanel from 'mixpanel-browser';
 
 // Enabling the debug mode flag is useful during implementation,
 // but it's recommended you remove it for production
-mixpanel.init('87bd792ed0bb2f5e6767071887c161dd', {debug: false}); 
+mixpanel.init('87bd792ed0bb2f5e6767071887c161dd', {debug: true}); 
 mixpanel.track('Page Loaded');
 
 function App() {
@@ -31,10 +31,10 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="app">
+      <header className="app__header">
         <h1>Café com Dungeon</h1>
-        <form>
+        <form className="app__search">
           <input type="text" className="search" placeholder="Pesquise.." aria-label="Pesquise" onChange={handleChange} />
         </form>
         </header>

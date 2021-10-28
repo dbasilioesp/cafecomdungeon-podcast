@@ -1,12 +1,4 @@
-body {
-  background-color: #FEEB73;
-  opacity: 0.8;
-  background-image:  radial-gradient(#aca46a 0.8500000000000001px, transparent 0.8500000000000001px), radial-gradient(#aca46a 0.8500000000000001px, #FEEB73 0.8500000000000001px);
-  background-size: 34px 34px;
-  background-position: 0 0,17px 17px;
-}
-
-.App {
+.app {
   min-height: 100vh;
   font-size: calc(10px + 2vmin);
   padding: 4vw;
@@ -16,8 +8,18 @@ body {
   background-color: white;
 }
 
+@media (max-width: 800px) {
+  .app {
+    padding: 4vw 8vw;
+  }
+}
+
 .app__header {
 
+}
+
+.app__search {
+  
 }
 
 .search {
