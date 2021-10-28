@@ -1,0 +1,55 @@
+.card {
+    border-radius: 5px;
+    padding: 25px 25px 15px;
+    min-width: 200px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.card__title {
+    font-size: 20px;
+    line-height: 1;
+    margin: 0;
+}
+
+.card__id {
+    line-height: 1;
+}
+
+.card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+}
+
+.card__content {
+    line-height: 1.5;
+}
+
+.card__rpg {
+    border-radius: 20px;
+    padding: 2px 6px;
+    margin-right: 8px;
+    background-color: coral;
+}
+
+.card__category {
+    border-radius: 20px;
+    padding: 2px 6px;
+    margin-right: 8px;
+    background-color: aqua;
+}
+
+.card__description {
+
+}
+
+.card__links {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 5px;
+    column-gap: 20px;
+    overflow: hidden;
+}
