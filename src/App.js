@@ -2,11 +2,8 @@ import { useRef, useState } from 'react';
 import database from './base.json';
 import Card from './components/card/Card'
 import './App.css';
-import mixpanel from 'mixpanel-browser';
+import mixpanel from './plugins/mixpanel';
 
-// Enabling the debug mode flag is useful during implementation,
-// but it's recommended you remove it for production
-mixpanel.init('87bd792ed0bb2f5e6767071887c161dd', {debug: true}); 
 mixpanel.track('Page Loaded');
 
 function App() {
@@ -34,9 +31,9 @@ function App() {
     <div className="app">
       <header className="app__header">
         <h1>Café com Dungeon</h1>
-        <form className="app__search">
+        <div className="app__search">
           <input type="text" className="search" placeholder="Pesquise.." aria-label="Pesquise" onChange={handleChange} />
-        </form>
+        </div>
         </header>
         <main className="card-grid">
           {

@@ -1,9 +1,19 @@
 import './card.css'
+import mixpanel from '../../plugins/mixpanel';
 
 export default function Card (props){
     const { title, id, description, rpg, category, links } = props;
 
     const listLinks = links.split('\n')
+    
+    const trackClick = (card, link) => {
+        const props = {
+            link,
+            id: card.id, 
+            title: card.title,
+        }
+        mixpanel.track('Card Link', props)
+    }
 
     return (
         <div className="card">
@@ -19,7 +29,13 @@ export default function Card (props){
             <div className="card__links">
                 {
                     listLinks.map(link => (
-                        <a href={link} target="_blank" rel="noreferrer" key={link}>{link}</a>
+                        <a 
+                            href={link}
+                            target="_blank" 
+                            rel="noreferrer" 
+                            key={link} 
+                            onClick={() => trackClick(props, link)}
+                        >{link}</a>
                     ))
                 }
             </div>
