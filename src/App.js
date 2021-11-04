@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
-import database from './base.json';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+// import database from './base.json';
 import Card from './components/card/Card'
 import './App.css';
 import mixpanel from './plugins/mixpanel';
@@ -7,24 +8,33 @@ import mixpanel from './plugins/mixpanel';
 mixpanel.track('Page Loaded');
 
 function App() {
-  const [base, setBase ] =  useState(database)
-  const timerRef = useRef(null);
+  const [episodes, setEpisodes ] =  useState([])
+  // const timerRef = useRef(null);
+
+  async function getEpisodes() {
+    const response = await axios.get('http://localhost:3000/episodes');
+    setEpisodes(response.data.items);
+  }
+
+  useEffect(() => { 
+    getEpisodes();
+  }, [])
   
   const handleChange = (event) => {
-    const newBase = database.filter(item => {
-      const text = JSON.stringify(item);
-      return text.search(event.target.value) !== -1;
-    })
+    // const newBase = database.filter(item => {
+    //   const text = JSON.stringify(item);
+    //   return text.search(event.target.value) !== -1;
+    // })
     
-    window.clearTimeout(timerRef.current);
+    // window.clearTimeout(timerRef.current);
     
-    if(event.target.value.length >= 3) {  
-      timerRef.current = setTimeout(() => {
-        mixpanel.track('Search', {query: event.target.value});
-      }, 1000);
-    }
+    // if(event.target.value.length >= 3) {  
+    //   timerRef.current = setTimeout(() => {
+    //     mixpanel.track('Search', {query: event.target.value});
+    //   }, 1000);
+    // }
     
-    setBase(newBase);
+    // setBase(newBase);
   }
 
   return (
@@ -37,16 +47,14 @@ function App() {
         </header>
         <main className="card-grid">
           {
-            base.map(item => {
+            episodes.map(item => {
               return (
                 <Card 
-                  id={item['Nº']}
-                  title={item['Episódio']}
-                  description={item['Descrição']}
-                  category={item['Categoria']}
-                  rpg={item['RPG']}
-                  links={item['Links']}
-                  key={item['Nº']}
+                  id={item.id}
+                  title={item.name}
+                  description={item.html_description}
+                  link={item.uri}
+                  key={item.id}
                 />
               )
             })
