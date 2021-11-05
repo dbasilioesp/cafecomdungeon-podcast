@@ -1,19 +1,6 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import './card.css'
 import mixpanel from '../../plugins/mixpanel';
-
-function trackLinks(title) {
-    const links = document.querySelectorAll('a')
-    for (const link of links) {
-        link.addEventListener('click', (event) => {
-            const props = {
-                link: event.target.href,
-                title: title,
-            }
-            mixpanel.track('Card Link', props)
-        })    
-    }
-}
 
 const Icon = () => (
     <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -25,10 +12,32 @@ const Icon = () => (
 
 export default function Card (props){
     const { title, description, link } = props;
+    const cardRef = useRef()
+
+    const trackLinks = useCallback(() => {
+        const links = cardRef.current.querySelectorAll('a')
+        for (const link of links) {
+            link.addEventListener('click', (event) => {
+                const props = {
+                    link: event.target.href,
+                    title: title,
+                }
+                if (link.getAttributeNames().includes('data-spotify')) {
+                    mixpanel.track('Spotify Link', props)    
+                } else {
+                    mixpanel.track('Card Link', props)
+                }
+            })    
+        }
+    }, [title, cardRef])
     
     useEffect(() => {
-        trackLinks(title);
-    }, [title])
+        trackLinks();
+        const links = cardRef.current.querySelectorAll('a');
+        for (const link of links) {
+            link.setAttribute('target', '_blank');
+        }
+    }, [trackLinks, cardRef])
 
     let copy = description.split('<p>#APRESENTA</p>')[0];
     copy = copy.split('<p>##</p>')[0]
@@ -36,10 +45,10 @@ export default function Card (props){
     copy = copy.replace(/<p>\s+<\/p>/gi, '')
     
     return (
-        <div className="card">
+        <div className="card" ref={cardRef}>
             <div className="card__header">
                 <h1 className="card__title">{title}</h1>
-                <a href={link} target="_blank" aria-label="Spotify URI" title="Spotify URI" rel="noreferrer"><Icon /></a>
+                <a href={link} data-spotify target="_blank" aria-label="Spotify URI" title="Spotify URI" rel="noreferrer"><Icon /></a>
             </div>
             <div className="card__content" dangerouslySetInnerHTML={{__html: copy}}>
             </div>
