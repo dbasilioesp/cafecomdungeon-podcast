@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ENV from '../env';
@@ -15,15 +16,15 @@ function App() {
   const [total, setTotal] = useState(9999)
   const [loading, setLoading] = useState(false)
 
-  const getEpisodes = useCallback(async (page) => {
+  const getEpisodes = useCallback(async () => {
     setLoading(true);
-    const offset = (page - 1) * (LIMIT + 1);
+    const offset = (currentPage - 1) * (LIMIT + 1);
     const config = {params: { limit: LIMIT, offset }}
     const response = await axios.get(`${ENV.api}/episodes`, config);
     setTotal(response.data.total)
     setEpisodes([...episodes, ...response.data.items]);
     setLoading(false);
-  }, [setLoading, setTotal, setEpisodes, episodes])
+  }, [setLoading, setTotal, setEpisodes, episodes, currentPage])
 
   const intersectPagination = useCallback(() => {
     const callbackObserver = (entries, observer) => {
@@ -41,8 +42,11 @@ function App() {
   }, [currentPage, setPage])
   
   useEffect(() => {
-    getEpisodes(currentPage)
-  }, [currentPage, getEpisodes])
+    if (episodes.length === 0) {
+      window.scrollTo(0, 0)
+    }
+    getEpisodes()
+  }, [currentPage])
 
   useEffect(() => {
     if (episodes.length > 0 && episodes.length < total){
@@ -50,7 +54,7 @@ function App() {
         intersectPagination()
       }, 1000);
     }
-  }, [episodes, total, intersectPagination])
+  }, [episodes])
 
   return (
     <div className="app">
