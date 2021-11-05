@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ENV from '../env';
 import Card from '../components/card/Card'
@@ -15,7 +15,7 @@ function App() {
   const [total, setTotal] = useState(9999)
   const [loading, setLoading] = useState(false)
 
-  async function getEpisodes(page) {
+  const getEpisodes = useCallback(async (page) => {
     setLoading(true);
     const offset = (page - 1) * (LIMIT + 1);
     const config = {params: { limit: LIMIT, offset }}
@@ -23,9 +23,9 @@ function App() {
     setTotal(response.data.total)
     setEpisodes([...episodes, ...response.data.items]);
     setLoading(false);
-  }
+  }, [setLoading, setTotal, setEpisodes, episodes])
 
-  function intersectPagination() {
+  const intersectPagination = useCallback(() => {
     const callbackObserver = (entries, observer) => {
       for (const entry of entries) {
         if(entry.isIntersecting){
@@ -38,11 +38,11 @@ function App() {
     const configObserver = {rootMargin: '0px 0px -90px 0px'};
     const observer = new IntersectionObserver(callbackObserver, configObserver);
     observer.observe(document.querySelector('footer'))
-  }
+  }, [currentPage, setPage])
   
   useEffect(() => {
     getEpisodes(currentPage)
-  }, [currentPage])
+  }, [currentPage, getEpisodes])
 
   useEffect(() => {
     if (episodes.length > 0 && episodes.length < total){
@@ -50,7 +50,7 @@ function App() {
         intersectPagination()
       }, 1000);
     }
-  }, [episodes])
+  }, [episodes, total, intersectPagination])
 
   return (
     <div className="app">

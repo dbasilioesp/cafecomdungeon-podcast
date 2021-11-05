@@ -28,7 +28,7 @@ export default function Card (props){
     
     useEffect(() => {
         trackLinks(title);
-    }, [])
+    }, [title])
 
     let copy = description.split('<p>#APRESENTA</p>')[0];
     copy = copy.split('<p>##</p>')[0]
