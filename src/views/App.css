@@ -18,6 +18,15 @@
 
 }
 
+.app__footer {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 30px;
+}
+
 .app__search {
   
 }
