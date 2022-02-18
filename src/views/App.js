@@ -50,6 +50,7 @@ function App() {
   }
 
   async function getEpisodes(page, search) {
+    console.log(page)
     const config = { params: { page: page - 1, q: search }}
     const { data } = await axios.get(`${ENV.api}/episodes`, config);
     const inNumberOfPages = Math.ceil(data.total / LIMIT)
@@ -89,7 +90,7 @@ function App() {
       setSearch(inSearch)
     }
 
-    await getEpisodes(inPage, inSearch);
+    await getEpisodes(inPage || page, inSearch);
     setLoading(false);
   }, [])
 
@@ -120,7 +121,7 @@ function App() {
                 id={item.id}
                 title={item.name}
                 description={item.htmlDescription}
-                link={item.hosts[0].uri}
+                link={item.hosts[0].url}
                 key={index}
               />
             )
