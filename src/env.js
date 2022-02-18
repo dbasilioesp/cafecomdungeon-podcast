@@ -1,10 +1,5 @@
 const ENV = {
-    development: {
-        api: 'http://localhost:3000',
-    },
-    production: {
-        api: 'https://cafe-com-dungeon-api.onrender.com',
-    }
+    api: process.env.REACT_APP_API_ENDPOINT || 'http://localhost:3000',
 };
 
-export default ENV[process.env.NODE_ENV];
+export default ENV;
