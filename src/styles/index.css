@@ -1,3 +1,8 @@
+:root {
+  --color-bg-primary: #2C3334;
+  --color-bg-secondary: #FEEB73;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -10,9 +15,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #FEEB73;
-  opacity: 0.8;
-  background-image:  radial-gradient(#aca46a 0.8500000000000001px, transparent 0.8500000000000001px), radial-gradient(#aca46a 0.8500000000000001px, #FEEB73 0.8500000000000001px);
+  background-color: var(--color-bg-primary);
+  background-image:  radial-gradient(var(--color-bg-secondary) 0.8500000000000001px, transparent 0.8500000000000001px), radial-gradient(var(--color-bg-secondary) 0.8500000000000001px, var(--color-bg-primary) 0.8500000000000001px);
   background-size: 34px 34px;
   background-position: 0 0,17px 17px;
 }
