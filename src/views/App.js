@@ -120,7 +120,7 @@ function App() {
               <Card 
                 id={item.id}
                 title={item.name}
-                description={item.htmlDescription}
+                description={item.preview || item.htmlDescription}
                 link={item.hosts[0].url}
                 key={index}
               />
