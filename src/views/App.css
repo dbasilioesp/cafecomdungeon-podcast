@@ -1,7 +1,7 @@
 .app {
   min-height: 100vh;
   font-size: calc(10px + 2vmin);
-  padding: 4vw;
+  padding: 30px 4vw;
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
@@ -15,7 +15,22 @@
 }
 
 .app__header {
+  margin-bottom: 40px;
+}
 
+.app__header h1 {
+  line-height: 1;
+  color: black;
+  margin: 0;
+  font-size: 3rem;
+}
+
+.app__header__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: black;
+  text-decoration: none;
 }
 
 .app__footer {

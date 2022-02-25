@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import './card.css'
 import mixpanel from '../../plugins/mixpanel';
+import Description from '../description/Description';
 
 const Icon = () => (
     <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -42,7 +43,6 @@ export default function Card (props){
     let copy = description.split('<p>#APRESENTA</p>')[0];
     copy = copy.split('<p>##</p>')[0]
     copy = copy.split('***')[0]
-    copy = copy.replace(/<p>\s+<\/p>/gi, '')
     
     return (
         <div className="card" ref={cardRef}>
@@ -50,8 +50,7 @@ export default function Card (props){
                 <h1 className="card__title">{title}</h1>
                 <a href={link} data-spotify target="_blank" aria-label="Spotify URI" title="Spotify URI" rel="noreferrer"><Icon /></a>
             </div>
-            <div className="card__content" dangerouslySetInnerHTML={{__html: copy}}>
-            </div>
+            <Description content={copy} />
         </div>
     )
 }
