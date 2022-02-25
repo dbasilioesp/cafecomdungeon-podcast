@@ -19,15 +19,15 @@ export default function Episode() {
   const [loading, setLoading] = useState(true)
   const [episode, setEpisode] = useState(null)
 
-  async function getEpisode(episodeId) {
-    const { data } = await axios.get(`${ENV.api}/episodes/${episodeId}`);
-    setEpisode(data)
-    setLoading(false)
-  }
+  useEffect(() => {
+    async function getEpisode() {
+      const { data } = await axios.get(`${ENV.api}/episodes/${episodeId}`);
+      setEpisode(data)
+      setLoading(false)
+    }
 
-  useEffect(async () => {
-    getEpisode(episodeId)
-  }, [])
+    getEpisode()
+  }, [episodeId])
 
   return (
     <div className="episode">

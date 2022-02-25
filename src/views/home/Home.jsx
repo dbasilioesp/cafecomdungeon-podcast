@@ -114,11 +114,11 @@ export default function Home() {
         </nav>
       </div>
       <PaginationInfo page={page} numberOfPages={numberOfPages} total={total}></PaginationInfo>
-      {/* <footer className="app__footer">
-        {loading && 'Carregando mais episódios...'}
-      </footer> */}
+      {
+        loading && <div>Carregando mais episódios...</div>
+      }
       <div className="card-grid">
-        {
+        {!loading && 
           episodes.map((item, index) => {
             return (
               <Card 
