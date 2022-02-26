@@ -55,7 +55,6 @@ export default function Home() {
   }
 
   async function getEpisodes(page, search) {
-    console.log(page)
     const config = { params: { page: page - 1, q: search }}
     const { data } = await axios.get(`${ENV.api}/episodes`, config);
     const inNumberOfPages = Math.ceil(data.total / LIMIT)
@@ -65,7 +64,6 @@ export default function Home() {
     setNumberOfPages(inNumberOfPages)
     setNextEnable(page < inNumberOfPages)
     setPrevEnable(page > 1)
-    console.log(page > inNumberOfPages)
   }
 
   function searchEpisodes(searchParam) {

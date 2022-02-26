@@ -18,7 +18,7 @@ export default function Episode() {
   const { episodeId } = useParams();
   const [loading, setLoading] = useState(true)
   const [episode, setEpisode] = useState(null)
-
+  
   useEffect(() => {
     async function getEpisode() {
       const { data } = await axios.get(`${ENV.api}/episodes/${episodeId}`);
@@ -38,6 +38,14 @@ export default function Episode() {
             <Link to={`/episodes/${episodeId}`}>{episode.episodeNumber}</Link>
           </Breadcrumbs>
           <Title className="episode__title">{episode.name}</Title>
+          <iframe 
+            title="bla"
+            src={`https://open.spotify.com/embed/episode/${episode.hosts[0].externalId}`}
+            width="100%"
+            height="160" 
+            frameborder="0" 
+            allowtransparency="true" 
+            allow="encrypted-media"></iframe>
           <Description content={episode.htmlDescription}></Description>
         </>
       )}
