@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
 import axios from 'axios';
+import styled from "styled-components";
 import ENV from '../../env';
 import Card from '../../components/card/Card'
 import PageButton from '../../components/page-button/PageButton'
@@ -11,7 +11,23 @@ import PaginationInfo from '../../components/pagination-info/PaginationInfo';
 const LIMIT = 20;
 let timer;
 
-const TitleLink = ({title, id}) => (<Link to={`/episodes/${id}`}>{title}</Link>)
+const SearchForm = styled.div`
+  display: flex;
+  gap: 10px;
+  margin: 0 auto 30px;
+`
+
+const Pagination = styled.nav`
+  display: flex;
+  gap: 6px;
+`
+
+const CardGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+`
+
 
 export default function Home() {
   const [episodes, setEpisodes ] =  useState([])
@@ -39,7 +55,7 @@ export default function Home() {
     const url = new URL(window.location.href)
     return url.searchParams;
   }
-  
+
   async function nextPage() {
     const newPage = page + 1
     setPage(newPage)
@@ -85,7 +101,7 @@ export default function Home() {
     const queryParams = getQueryParams()
     const inPage = queryParams.get('page')
     const inSearch = queryParams.get('q')
-    
+
     if (inPage) {
       setPage(Number(inPage))
     }
@@ -104,32 +120,32 @@ export default function Home() {
 
   return (
     <>
-      <div className='search-form'>
+      <SearchForm className='search-form'>
         <SearchInput onChange={handleChange} />
-        <nav className='pagination'>
+        <Pagination className='pagination'>
           <PageButton onClick={() => prevPage()} disabled={!prevEnable}>&#60;</PageButton>
           <PageButton onClick={() => nextPage()} disabled={!nextEnable}>&#62;</PageButton>
-        </nav>
-      </div>
+        </Pagination>
+      </SearchForm>
       <PaginationInfo page={page} numberOfPages={numberOfPages} total={total}></PaginationInfo>
       {
         loading && <div>Carregando mais episódios...</div>
       }
-      <div className="card-grid">
-        {!loading && 
+      <CardGrid className="card-grid">
+        {!loading &&
           episodes.map((item, index) => {
             return (
-              <Card 
+              <Card
                 id={item.id}
-                title={<TitleLink id={item.id} title={item.name} />}
+                title={item.name}
                 description={item.preview || item.htmlDescription}
-                link={item.hosts[0].url}
+                link={`/episodes/${item.id}`}
                 key={index}
               />
             )
           })
         }
-      </div>
+      </CardGrid>
     </>
   )
 }
