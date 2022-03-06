@@ -36,7 +36,7 @@ const CardHeader = styled.div`
 `
 
 export default function Card (props){
-  const { title, description, link } = props;
+  const { title, description, link, onClick } = props;
   const cardRef = useRef()
 
   const trackLinks = useCallback(() => {
@@ -71,7 +71,7 @@ export default function Card (props){
   return (
       <CardContainer className="card" ref={cardRef}>
         <CardHeader className="card__header">
-          <CardLink to={link}>
+          <CardLink to={link} onClick={onClick}>
             <CardTitle className="card__title">{title}</CardTitle>
           </CardLink>
         </CardHeader>

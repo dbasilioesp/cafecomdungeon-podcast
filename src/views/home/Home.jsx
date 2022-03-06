@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom'
 import axios from 'axios';
 import styled from "styled-components";
 import ENV from '../../env';
@@ -38,6 +39,7 @@ export default function Home() {
   const [search, setSearch] = useState(null)
   const [nextEnable, setNextEnable] = useState(true)
   const [prevEnable, setPrevEnable] = useState(true)
+  const [ searchParams ] = useSearchParams()
 
   function setPageQueryParam(page) {
     const url = new URL(window.location.href)
@@ -49,11 +51,6 @@ export default function Home() {
     const url = new URL(window.location.href)
     url.searchParams.set('q', query)
     window.history.pushState({ path: url.href }, '', url.href);
-  }
-
-  function getQueryParams() {
-    const url = new URL(window.location.href)
-    return url.searchParams;
   }
 
   async function nextPage() {
@@ -98,9 +95,8 @@ export default function Home() {
 
   useEffect(async () => {
     setLoading(true);
-    const queryParams = getQueryParams()
-    const inPage = queryParams.get('page')
-    const inSearch = queryParams.get('q')
+    const inPage = searchParams.get('page')
+    const inSearch = searchParams.get('q')
 
     if (inPage) {
       setPage(Number(inPage))
@@ -117,6 +113,8 @@ export default function Home() {
   const handleChange = (event) => {
     searchEpisodes(event.target.value)
   }
+
+  const referrer = window.location.pathname + window.location.search
 
   return (
     <>
@@ -139,7 +137,7 @@ export default function Home() {
                 id={item.id}
                 title={item.name}
                 description={item.preview || item.htmlDescription}
-                link={`/episodes/${item.id}`}
+                link={`/episodes/${item.id}?ref=${referrer}`}
                 key={index}
               />
             )
