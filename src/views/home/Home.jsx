@@ -13,14 +13,21 @@ const LIMIT = 20;
 let timer;
 
 const SearchForm = styled.div`
-  display: flex;
-  gap: 10px;
-  margin: 0 auto 30px;
+  margin: 0 auto 10px;
 `
 
-const Pagination = styled.nav`
+const Pagination = styled.div`
   display: flex;
   gap: 6px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`
+
+const PaginationRight = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
 `
 
 const CardGrid = styled.div`
@@ -29,103 +36,130 @@ const CardGrid = styled.div`
   gap: 20px;
 `
 
+const TotalInfo = styled.span`
+  display: block;
+  font-size: 12px;
+  margin-top: 5px;
+`
+
+const CustomSelect = styled.select`
+  height: 40px;
+  border-radius: 4px;
+  padding: 0 5px;
+`
+
 
 export default function Home() {
+  const [ searchParams, setSearchParams ] = useSearchParams()
+
+  const params = {
+    page: Number(searchParams.get('page')) || 1,
+    search: searchParams.get('q'),
+    order: searchParams.get('order') || 'desc'
+  }
+
+  const [config, setConfig] =  useState(params)
+
   const [episodes, setEpisodes ] =  useState([])
   const [loading, setLoading] = useState(false)
-  const [page, setPage ] =  useState(1)
+  const [referrer, setReferrer] = useState(null)
+
   const [total, setTotal] = useState(9999)
   const [numberOfPages, setNumberOfPages] = useState(9999)
-  const [search, setSearch] = useState(null)
   const [nextEnable, setNextEnable] = useState(true)
   const [prevEnable, setPrevEnable] = useState(true)
-  const [ searchParams ] = useSearchParams()
-
-  function setPageQueryParam(page) {
-    const url = new URL(window.location.href)
-    url.searchParams.set('page', page)
-    window.history.pushState({ path: url.href }, '', url.href);
-  }
-
-  function setSearchQueryParam(query) {
-    const url = new URL(window.location.href)
-    url.searchParams.set('q', query)
-    window.history.pushState({ path: url.href }, '', url.href);
-  }
 
   async function nextPage() {
-    const newPage = page + 1
-    setPage(newPage)
-    setPageQueryParam(newPage)
-    await getEpisodes(newPage, search);
+    setConfig({...config, page: config.page + 1})
   }
 
   async function prevPage() {
-    const newPage = page - 1
-    setPage(newPage)
-    setPageQueryParam(newPage)
-    await getEpisodes(newPage, search);
+    setConfig({...config, page: config.page - 1})
   }
 
-  async function getEpisodes(page, search) {
-    const config = { params: { page: page - 1, q: search }}
-    const { data } = await axios.get(`${ENV.api}/episodes`, config);
+  function factoryQueryParams() {
+    const query = {
+      page: config.page,
+      order: config.order
+    }
+    if (config.search) {
+      query.q = config.search
+    }
+    return query;
+  }
+
+  function startLoading() {
+    document.body.style.setProperty('height', document.body.clientHeight + 'px')
+    setLoading(true)
+  }
+
+  function finishLoading() {
+    setLoading(false)
+    document.body.style.setProperty('height', 'auto')
+  }
+
+  async function getEpisodes() {
+    startLoading()
+
+    const params = {
+      page: config.page - 1,
+      q: config.search,
+      order: config.order,
+    }
+
+    setSearchParams(factoryQueryParams())
+
+    const { data } = await axios.get(`${ENV.api}/episodes`, { params });
     const inNumberOfPages = Math.ceil(data.total / LIMIT)
 
     setTotal(data.total);
     setEpisodes([...data.data]);
     setNumberOfPages(inNumberOfPages)
-    setNextEnable(page < inNumberOfPages)
-    setPrevEnable(page > 1)
+    setNextEnable(config.page < inNumberOfPages)
+    setPrevEnable(config.page > 1)
+
+    setReferrer(btoa(window.location.pathname + window.location.search));
+    setTimeout(() => finishLoading(), 300);
   }
 
-  function searchEpisodes(searchParam) {
-    setLoading(true);
+  useEffect(() => {
+    getEpisodes();
+  }, [])
+
+  useEffect(() => {
+    getEpisodes()
+  }, [config])
+
+  const handleSearch = (event) => {
+    const search = event.target.value;
     if (timer) { clearTimeout(timer) }
 
     timer = setTimeout(async () => {
-      setPage(1)
-      setPageQueryParam(1)
-      setSearchQueryParam(searchParam)
-      setSearch(searchParam)
-      await getEpisodes(page, searchParam)
-      setLoading(false);
+      setConfig({...config, page: 1, search})
     }, 600);
   }
 
-  useEffect(async () => {
-    setLoading(true);
-    const inPage = searchParams.get('page')
-    const inSearch = searchParams.get('q')
-
-    if (inPage) {
-      setPage(Number(inPage))
-    }
-
-    if (inSearch) {
-      setSearch(inSearch)
-    }
-
-    await getEpisodes(inPage || page, inSearch);
-    setLoading(false);
-  }, [])
-
-  const handleChange = (event) => {
-    searchEpisodes(event.target.value)
+  const handleOrder = async (event) => {
+    setConfig({...config, page: 1, order: event.target.value})
   }
-
-  const referrer = window.location.pathname + window.location.search
 
   return (
     <>
       <SearchForm className='search-form'>
-        <SearchInput onChange={handleChange} />
-        <Pagination className='pagination'>
-          <PageButton onClick={() => prevPage()} disabled={!prevEnable}>&#60;</PageButton>
-          <PageButton onClick={() => nextPage()} disabled={!nextEnable}>&#62;</PageButton>
-        </Pagination>
+        <SearchInput onChange={handleSearch} />
+        <TotalInfo>{total} episódios encontrados.</TotalInfo>
       </SearchForm>
-      <PaginationInfo page={page} numberOfPages={numberOfPages} total={total}></PaginationInfo>
+      <Pagination className='pagination'>
+          <PaginationInfo page={config.page} numberOfPages={numberOfPages}></PaginationInfo>
+          <PaginationRight>
+            <CustomSelect onChange={handleOrder} value={config.order}>
+              <option value="asc">Ordem ASC</option>
+              <option value="desc">Ordem DESC</option>
+            </CustomSelect>
+            <PageButton onClick={() => prevPage()} disabled={!prevEnable}>&#60;</PageButton>
+            <PageButton onClick={() => nextPage()} disabled={!nextEnable}>&#62;</PageButton>
+          </PaginationRight>
+      </Pagination>
       {
         loading && <div>Carregando mais episódios...</div>
       }
@@ -137,6 +171,7 @@ export default function Home() {
                 id={item.id}
                 title={item.name}
                 description={item.preview || item.htmlDescription}
+                date={item.releaseDate}
                 link={`/episodes/${item.id}?ref=${referrer}`}
                 key={index}
               />

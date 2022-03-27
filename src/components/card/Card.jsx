@@ -35,8 +35,17 @@ const CardHeader = styled.div`
   gap: 25px;
 `
 
+const DateEpisode = styled.span`
+  font-size: 13px;
+`
+
+function formatDate(date) {
+  const d = new Date(date);
+  return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear()
+}
+
 export default function Card (props){
-  const { title, description, link, onClick } = props;
+  const { title, description, link, date, onClick } = props;
   const cardRef = useRef()
 
   const trackLinks = useCallback(() => {
@@ -74,6 +83,7 @@ export default function Card (props){
           <CardLink to={link} onClick={onClick}>
             <CardTitle className="card__title">{title}</CardTitle>
           </CardLink>
+          <DateEpisode>{formatDate(date)}</DateEpisode>
         </CardHeader>
         <Description content={copy} />
       </CardContainer>

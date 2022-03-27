@@ -30,7 +30,10 @@ export default function Episode() {
     getEpisode()
   }, [episodeId])
 
-  const referrer = searchParams.get('ref') || '/';
+  let referrer = '/';
+  if (searchParams.get('ref')) {
+    referrer = atob(searchParams.get('ref'))
+  }
 
   return (
     <div className="episode">
